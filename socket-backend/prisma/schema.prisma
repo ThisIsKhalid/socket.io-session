@@ -1,0 +1,37 @@
+// datasource and generator setup
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id String @id @default(cuid())
+
+  firstName String
+  lastName  String
+  email     String @unique
+  password  String
+
+  role UserRole @default(USER)
+
+  otp          String?
+  otpExpiresAt DateTime?
+  isVerified   Boolean   @default(false)
+
+  accessToken  String?
+  refreshToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
